@@ -39,6 +39,8 @@ class Item(Base):
         Short free‑form summary or description of the item.
     source_url : str | None
         Original URL to the item in the source system.
+    genre : str | None
+        A comma-separated list of subjects/genres for the item, if available.
     """
     __tablename__ = "items"
 
@@ -50,9 +52,10 @@ class Item(Base):
     type: Mapped[str | None] = mapped_column(String, index=True)
     summary: Mapped[str | None] = mapped_column(Text)
     source_url: Mapped[str | None] = mapped_column(String)
+    genre: Mapped[str | None] = mapped_column(String, index=True)
 
     def __repr__(self) -> str:
         return (
             f"<Item id={self.id!r} title={self.title!r} date={self.date!r} "
-            f"author={self.author!r}>"
+            f"author={self.author!r} genre={self.genre!r}>"
         )

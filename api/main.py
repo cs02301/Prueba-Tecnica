@@ -29,9 +29,14 @@ class ItemOut(BaseModel):
     type: Optional[str] = None
     summary: Optional[str] = None
     source_url: Optional[str] = None
+    genre: Optional[str] = None
 
     class Config:
         from_attributes = True
+
+class GenreOut(BaseModel):
+    name: str
+    count: int
 
 DB_URL = os.getenv("DB_URL", "sqlite:///./data.db")
 API_KEY = os.getenv("API_KEY", "dev-key")
@@ -65,6 +70,7 @@ def list_items(
     q: Optional[str] = Query(None, description="Término de búsqueda para el título"),
     author: Optional[str] = Query(None, description="Filtrar por nombre de autor"),
     type: Optional[str] = Query(None, description="Filtrar por tipo/categoría"),
+    genre: Optional[str] = Query(None, description="Filtrar por género/tema"),
     location: Optional[str] = Query(None, description="Filtrar por ubicación"),
     limit: int = Query(20, ge=1, le=100, description="Número máximo de resultados a devolver"),
     offset: int = Query(0, ge=0, description="Número de ítems a omitir"),
@@ -93,6 +99,8 @@ def list_items(
             stmt = stmt.where(Item.type == type)
         if location:
             stmt = stmt.where(Item.location.ilike(f"%{location}%"))
+        if genre:
+            stmt = stmt.where(Item.genre.ilike(f"%{genre}%"))
         stmt = stmt.offset(offset).limit(limit)
         results = session.scalars(stmt).all()
         return [ItemOut.from_orm(obj) for obj in results]
@@ -127,3 +135,26 @@ def refresh(x_api_key: Optional[str] = Header(None, alias="X-API-KEY")) -> dict:
     # considera delegar a una tarea en segundo plano o cola de trabajo.
     etl_run()
     return {"status": "refresco iniciado"}
+
+@app.get("/genres", response_model=List[GenreOut])
+def list_genres(
+    *,
+    session: Session = Depends(get_session)
+) -> List[GenreOut]:
+    """
+    Devuelve una lista de géneros/temas distintos con su conteo aproximado.
+
+    Divide el campo ``genre`` (CSV) y normaliza a minúsculas.
+    """
+    stmt = select(Item.genre)
+    rows = session.execute(stmt).all()
+    counts: dict[str, int] = {}
+    for (g,) in rows:
+        if not g:
+            continue
+        parts = [p.strip().lower() for p in g.split(',') if p and p.strip()]
+        for p in parts:
+            counts[p] = counts.get(p, 0) + 1
+    # construir respuesta ordenada por frecuencia desc
+    entries = sorted(counts.items(), key=lambda kv: kv[1], reverse=True)
+    return [GenreOut(name=name, count=count) for name, count in entries[:200]]

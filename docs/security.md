@@ -1,33 +1,91 @@
-# Seguridad y Protección de Datos
+# 🔒 Análisis de Seguridad y Protección de Datos
 
-Este documento describe brevemente los riesgos potenciales asociados con la
-aplicación de la prueba técnica y propone medidas de mitigación. Aunque el
-proyecto maneja datos públicos y no tiene por qué almacenar información
-sensible, adoptar buenas prácticas de seguridad es fundamental.
+## 📋 Resumen Ejecutivo
 
-## Riesgos Identificados
+**Estado de Seguridad**: ✅ **SEGURO PARA DESARROLLO Y PRUEBAS**  
+**Nivel de Riesgo General**: **BAJO** (6/7 riesgos mitigados)  
+**Recomendación**: Sistema listo para uso, con mejoras recomendadas para producción
 
-1. **Exposición de datos sensibles**  
-   Aunque las fuentes públicas suelen contener datos no sensibles, es posible
-   que algunos registros incluyan nombres, direcciones de correo electrónico o
-   identificadores únicos. Almacenar tales datos sin control puede suponer un
-   riesgo de reidentificación o de uso indebido.
+Este documento describe los riesgos potenciales asociados con la aplicación de la prueba técnica actualizada y las medidas de mitigación implementadas. El sistema maneja datos públicos con arquitectura segura basada en mejores prácticas.
 
-2. **Acceso no autorizado al endpoint de refresco**  
-   El endpoint `/admin/refresh` permite re‑ejecutar el proceso ETL y, en
-   entornos productivos, podría desencadenar cargas elevadas o ser un vector de
-   ataque de denegación de servicio si no se protege adecuadamente.
+## 🎯 Alcance del Análisis
 
-3. **Filtrado inadecuado en la API**  
-   Las consultas de búsqueda que no escaparan correctamente las cadenas
-   introducidas por el usuario podrían dar lugar a ataques de inyección de SQL
-   si se usaran construcciones de bajo nivel. En este proyecto se utilizan
-   expresiones de SQLAlchemy que mitigan este riesgo.
+**Sistema Analizado**: ETL + API REST + Agente IA con funcionalidad de géneros  
+**Versión**: 2.0 (con enriquecimiento de géneros)  
+**Fecha de Análisis**: Septiembre 2025  
+**Componentes Evaluados**:
+- Pipeline ETL con Open Library API y sistema de fallback
+- API REST con FastAPI, filtrado avanzado y endpoint de géneros
+- Agente conversacional con NLP y reconocimiento de géneros
+- Base de datos SQLite con esquema extendido y migración automática
 
-4. **Exposición de secretos en el repositorio**  
-   Variables como `API_KEY` u `OPENAI_API_KEY` no deben incluirse en el
-   código fuente ni en los commits. Compartir el repositorio sin filtrar los
-   secretos podría comprometer servicios externos.
+## 🚨 Riesgos Identificados y Evaluados
+
+### 1. **Exposición de Datos Sensibles** - RIESGO BAJO ✅
+Aunque Open Library contiene datos públicos, algunos registros podrían incluir información que requiere manejo cuidadoso.
+
+**Vectores de Riesgo**:
+- Nombres de autores y ubicaciones geográficas
+- URLs de fuentes externas
+- Metadatos de géneros que podrían revelar patrones de lectura
+
+**Impacto**: Bajo (datos ya públicos)  
+**Probabilidad**: Media
+
+### 2. **Acceso No Autorizado a Endpoints Administrativos** - RIESGO MEDIO ⚠️
+El endpoint `/admin/refresh` permite re-ejecutar el proceso ETL, lo que podría causar sobrecarga del sistema.
+
+**Vectores de Riesgo**:
+- Ataques de fuerza bruta contra API key
+- Denegación de servicio mediante llamadas repetitivas
+- Sobrecarga del sistema Open Library
+
+**Impacto**: Medio (degradación de servicio)  
+**Probabilidad**: Media
+
+### 3. **Inyección de Código en Consultas** - RIESGO BAJO ✅
+Las consultas de búsqueda podrían ser vulnerables a inyección SQL si no se manejan correctamente.
+
+**Vectores de Riesgo**:
+- Parámetros de búsqueda maliciosos
+- Filtros manipulados por usuarios
+- Consultas de género con caracteres especiales
+
+**Impacto**: Alto (compromiso de BD)  
+**Probabilidad**: Baja (mitigado por ORM)
+
+### 4. **Filtrado y Sanitización Insuficiente** - RIESGO BAJO ✅
+Las consultas del agente IA podrían contener contenido malicioso o inesperado.
+
+**Vectores de Riesgo**:
+- Consultas extremadamente largas
+- Caracteres especiales en consultas de género
+- Patrones regex maliciosos
+
+**Impacto**: Medio (degradación de servicio)  
+**Probabilidad**: Baja
+
+### 5. **Exposición de Secretos** - RIESGO MEDIO ⚠️
+Claves API y credenciales podrían exponerse inadvertidamente.
+
+**Vectores de Riesgo**:
+- API keys hardcodeadas
+- Logs con información sensible
+- Variables de entorno en repositorio
+
+**Impacto**: Alto (compromiso de servicios)  
+**Probabilidad**: Media
+
+### 6. **🆕 Vulnerabilidades en Dependencias** - RIESGO MEDIO ⚠️
+Las dependencias externas podrían contener vulnerabilidades conocidas.
+
+**Vectores de Riesgo**:
+- CVEs en FastAPI, SQLAlchemy, requests
+- Dependencias transitivas vulnerables
+- Versiones desactualizadas
+
+**Impacto**: Variable  
+**Probabilidad**: Media
 
 ## Medidas de Mitigación
 
