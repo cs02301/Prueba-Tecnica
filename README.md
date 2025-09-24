@@ -218,17 +218,6 @@ El sistema carga automáticamente información bibliográfica diversa:
 - ✅ Interpretación de lenguaje natural
 - ✅ Respuestas formateadas del agente
 
-## 🚀 Próximos Pasos
-
-Para un entorno de **producción**, considerar:
-
-1. **Base de datos**: Migrar a PostgreSQL/MySQL
-2. **Autenticación**: JWT tokens, OAuth2
-3. **Cache**: Redis para consultas frecuentes
-4. **Monitoreo**: Logging, métricas, alertas
-5. **Containerización**: Docker + Kubernetes
-6. **CI/CD**: Tests automatizados, deployment
-
 ## 👥 Autor
 Cristian Andres Sierra Paez
 **Desarrollado como parte de prueba técnica**
