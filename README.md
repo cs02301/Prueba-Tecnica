@@ -220,6 +220,7 @@ El sistema carga automáticamente información bibliográfica diversa:
 
 ## 👥 Autor
 Cristian Andres Sierra Paez
+
 **Desarrollado como parte de prueba técnica**
 - 🗓️ **Fecha**: Septiembre 2025
 - 🔧 **Tecnologías**: Python, FastAPI, SQLAlchemy, IA/NLP
