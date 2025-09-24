@@ -230,12 +230,10 @@ Para un entorno de **producción**, considerar:
 6. **CI/CD**: Tests automatizados, deployment
 
 ## 👥 Autor
-
+Cristian Andres Sierra Paez
 **Desarrollado como parte de prueba técnica**
 - 🗓️ **Fecha**: Septiembre 2025
 - 🔧 **Tecnologías**: Python, FastAPI, SQLAlchemy, IA/NLP
 - 📊 **Cumplimiento**: 100% de requerimientos implementados
 
 ---
-
-> 💡 **Nota**: Este proyecto demuestra capacidades de integración de sistemas, desarrollo de APIs, procesamiento de lenguaje natural y análisis de seguridad de manera práctica y funcional.
