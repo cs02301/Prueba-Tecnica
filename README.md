@@ -1,4 +1,4 @@
-# 📚 Prueba Técnica: ETL + API REST + Agente IA
+﻿# 📚 Prueba Técnica: ETL + API REST + Agente IA
 
 > **Sistema completo de extracción, transformación, API y agente conversacional con búsqueda inteligente por géneros**
 
