@@ -393,5 +393,3 @@ Ver documentación completa en: [`docs/security.md`](docs/security.md)
 - 📊 **Cumplimiento**: 100% de requerimientos + funcionalidades avanzadas
 
 ---
-
-> 💡 **Este proyecto demuestra capacidades de integración de sistemas, desarrollo de APIs, procesamiento de lenguaje natural y análisis de seguridad de manera práctica y funcional.**
